@@ -1,66 +1,127 @@
 import React, { useState } from 'react';
 import {
   Container,
+  Grid,
   Box,
   Typography,
   TextField,
   Button,
-  Alert,
   Paper,
+  Link,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const VALID_PIN = '123456'; // pin
-
 const Login = () => {
-  const [pin, setPin] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (pin === VALID_PIN) {
-      localStorage.setItem('isLoggedIn', 'true');
-      navigate('/dashboard');
-    } else {
-      setError('Invalid PIN. Please try again.');
-    }
+    localStorage.setItem('isLoggedIn', 'true');
+    navigate('/dashboard');
   };
 
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={4} sx={{ mt: 8, p: 4 }}>
-        <Typography variant="h5" align="center" gutterBottom>
-          Admin Panel Login
-        </Typography>
+    // Background color for the entire page
+    <Box
+      sx={{
+        minHeight: '100vh',
+        bgcolor: '#f5f7fa', // light subtle background color
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 2,
+      }}
+    >
+      <Container maxWidth="md">
+        <Paper elevation={6} sx={{ borderRadius: 3, overflow: 'hidden' }}>
+          <Grid container>
+            {/* Left Side: Image */}
+            <Grid item xs={12} md={6}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%',
+                  minHeight: 400,
+                  backgroundColor: '#a5e7f3ff', // fallback bg color for image side
+                }}
+              >
+                <img
+                  src="/crm.jpg" // make sure it's in public folder
+                  alt="CRM"
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </Box>
+            </Grid>
 
-        <Typography variant="body2" align="center" color="text.secondary" gutterBottom>
-          Enter your 6-digit PIN to continue
-        </Typography>
+            {/* Right Side: Login Form */}
+            <Grid item xs={12} md={6}>
+              <Box sx={{ p: 6, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+                <Typography variant="h4" align="center" gutterBottom>
+                  CRM Login
+                </Typography>
+                <Typography variant="body1" align="center" color="text.secondary" gutterBottom>
+                  Enter your username and password
+                </Typography>
 
-        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+                <Box mt={3}>
+                  <TextField
+                    fullWidth
+                    label="Username"
+                    variant="outlined"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Password"
+                    variant="outlined"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Box>
 
-        <Box mt={3}>
-          <TextField
-            fullWidth
-            label="Enter PIN"
-            variant="outlined"
-            type="password"
-            value={pin}
-            inputProps={{ maxLength: 6 }}
-            onChange={(e) => setPin(e.target.value)}
-          />
-        </Box>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 4, py: 1.5, fontWeight: 'bold' }}
+                  onClick={handleLogin}
+                >
+                  Login
+                </Button>
 
-        <Button
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3 }}
-          onClick={handleLogin}
-        >
-          Login
-        </Button>
-      </Paper>
-    </Container>
+                {/* CRM Website Link or branding */}
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  align="center"
+                  sx={{ mt: 4 }}
+                >
+                  Visit our website:{' '}
+                  <Link
+                    href="https://yourcrmwebsite.com"
+                    target="_blank"
+                    rel="noopener"
+                    underline="hover"
+                  >
+                    yourcrmwebsite.com
+                  </Link>
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 

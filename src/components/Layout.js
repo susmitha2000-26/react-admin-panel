@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
@@ -18,16 +17,19 @@ const Layout = ({ children }) => {
     setSidebarOpen(false);
   };
 
+  // List of routes where Header/Footer should be hidden
+  const hideHeaderFooter = location.pathname === '/' || location.pathname === '/login';
+
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
-      <Header onToggleSidebar={toggleSidebar} />
-      <Box display="flex" flex={1} pt="64px">
-        <Sidebar open={isSidebarOpen} onClose={closeSidebar} />
-        <Box component="main" flex={1} p={3}>
+      {!hideHeaderFooter && <Header onToggleSidebar={toggleSidebar} />}
+      <Box display="flex" flex={1} pt={!hideHeaderFooter ? '64px' : 0}>
+        {!hideHeaderFooter && <Sidebar open={isSidebarOpen} onClose={closeSidebar} />}
+        <Box component="main" flex={1} p={hideHeaderFooter ? 0 : 3}>
           {children}
         </Box>
       </Box>
-      <Footer />
+      {!hideHeaderFooter && <Footer />}
     </Box>
   );
 };
