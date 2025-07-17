@@ -1,0 +1,44 @@
+{
+  "leads": [
+    {
+      "id": "1",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "phone": "1234567890",
+      "source": "Website",
+      "status": "Converted",
+      "notes": "",
+      "rep": "Alice"
+    },
+    {
+      "id": "2",
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "phone": "9876543210",
+      "source": "Social",
+      "status": "Converted",
+      "notes": "",
+      "rep": "Bob"
+    }
+  ],
+  "opportunities": [
+    {
+      "id": 1,
+      "name": "Opportunity from Alice",
+      "value": 5000,
+      "rep": "Alice",
+      "status": "Negotiation",
+      "closeDate": "2025-07-30",
+      "leadId": "1"
+    },
+    {
+      "id": "48f5",
+      "name": "Opportunity from Jane Smith",
+      "value": 5000,
+      "rep": "Bob",
+      "status": "Negotiation",
+      "closeDate": "2025-07-17",
+      "leadId": "2"
+    }
+  ]
+}

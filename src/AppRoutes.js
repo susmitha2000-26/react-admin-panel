@@ -8,6 +8,8 @@ import Leads from './leads/Leads';
 import Opportunity from './leads/Opportunity';
 import FollowUp from './leads/FollowUp';
 import SocialIntegration from './leads/SocialIntegration';
+import UserManagementPage from './pages/UserManagementPage';
+
 import { Routes, Route } from 'react-router-dom';
 
 const AppRoutes = () => {
@@ -18,10 +20,14 @@ const AppRoutes = () => {
       <Route path="/reports" element={<Layout><Reports /></Layout>} />
       <Route path="/settings" element={<Layout><Settings /></Layout>} />
       <Route path="/help" element={<Layout><Help /></Layout>} />
-       <Route path="/leads" element={<Leads />} />
-  <Route path="/leads/opportunity" element={<Opportunity />} />
-  <Route path="/leads/follow-up" element={<FollowUp />} />
-  <Route path="/leads/social" element={<SocialIntegration />} />
+      <Route path="/admin/users" element={<UserManagementPage />} />
+
+
+      {/* Wrap leads pages in Layout */}
+      <Route path="/leads" element={<Layout><Leads /></Layout>} />
+      <Route path="/leads/opportunity" element={<Layout><Opportunity /></Layout>} />
+      <Route path="/leads/follow-up" element={<Layout><FollowUp /></Layout>} />
+      <Route path="/leads/social" element={<Layout><SocialIntegration /></Layout>} />
     </Routes>
   );
 };
