@@ -1,4 +1,4 @@
-// src/social/SocialIntegrationPage.js
+
 import React from 'react';
 import {
   Box, Card, CardContent, Typography, Button, Grid, Switch, FormControlLabel

@@ -40,5 +40,15 @@
       "closeDate": "2025-07-17",
       "leadId": "2"
     }
+  ],
+  "followUps": [
+    {
+      "id": "808d",
+      "title": "rs",
+      "date": "2025-07-18",
+      "notes": "customer",
+      "leadId": "1",
+      "rep": "Alice"
+    }
   ]
 }

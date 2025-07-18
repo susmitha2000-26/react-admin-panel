@@ -26,7 +26,7 @@ const Login = () => {
     <Box
       sx={{
         minHeight: '100vh',
-        bgcolor: '#f5f7fa', // light subtle background color
+        bgcolor: '#f5f7fa', 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -45,11 +45,11 @@ const Login = () => {
                   justifyContent: 'center',
                   height: '100%',
                   minHeight: 400,
-                  backgroundColor: '#a5e7f3ff', // fallback bg color for image side
+                  backgroundColor: '#a5e7f3ff', // bg color for image side
                 }}
               >
                 <img
-                  src="/crm.jpg" // make sure it's in public folder
+                  src="/crm.jpg" 
                   alt="CRM"
                   style={{
                     maxWidth: '100%',
@@ -108,12 +108,12 @@ const Login = () => {
                 >
                   Visit our website:{' '}
                   <Link
-                    href="https://yourcrmwebsite.com"
+                    href="https://crmwebsite.com"
                     target="_blank"
                     rel="noopener"
                     underline="hover"
                   >
-                    yourcrmwebsite.com
+                    crmwebsite.com
                   </Link>
                 </Typography>
               </Box>
