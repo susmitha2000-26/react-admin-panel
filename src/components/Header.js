@@ -1,11 +1,20 @@
 import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Tooltip,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
-export default function Header({ onToggleSidebar }) {
+export default function Header({ onToggleSidebar, onLogout }) {
   return (
-    <AppBar position="fixed">
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
+
+        {/* Left: Menu Button */}
         <IconButton
           edge="start"
           color="inherit"
@@ -14,7 +23,25 @@ export default function Header({ onToggleSidebar }) {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6">CRM</Typography>
+
+        {/* Middle: Logo/Title */}
+        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          CRM
+        </Typography>
+
+        {/* Right: Logout Icon */}
+        <Tooltip title="Logout">
+          <IconButton
+            color="inherit"
+            onClick={() => {
+              console.log('Logout clicked'); // Confirm click is working
+              if (onLogout) onLogout();       // Call the passed-in handler
+            }}
+          >
+            <PowerSettingsNewIcon />
+          </IconButton>
+        </Tooltip>
+
       </Toolbar>
     </AppBar>
   );

@@ -17,17 +17,20 @@ import UserManagementPage from './pages/UserManagementPage';
 // Leads-related
 import Leads from './leads/Leads';
 import Opportunity from './leads/Opportunity';
+import OpportunityForm from './leads/OpportunityForm';
+
 import FollowUp from './leads/FollowUp';
 import SocialIntegration from './leads/SocialIntegration';
-
+import LeadForm from './leads/LeadForm';
 const AppRoutes = () => {
   return (
     <Routes>
 
       {/* Auth / Entry */}
-      <Route path="/" element={<Layout><Login /></Layout>} />
+      <Route path="/" element={<Login />} /> {/* ⬅ Public entry page */}
+      <Route path="/login" element={<Login />} /> {/* ⬅ Explicit login route */}
 
-      {/* Main App */}
+      {/* Main App with Layout */}
       <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
       <Route path="/reports" element={<Layout><Reports /></Layout>} />
       <Route path="/settings" element={<Layout><Settings /></Layout>} />
@@ -41,7 +44,11 @@ const AppRoutes = () => {
 
       {/* Leads */}
       <Route path="/leads" element={<Layout><Leads /></Layout>} />
+      <Route path="/leads/create" element={<Layout><LeadForm /></Layout>} />
+      <Route path="/leads/edit/:id" element={<Layout><LeadForm /></Layout>} />
       <Route path="/leads/opportunity" element={<Layout><Opportunity /></Layout>} />
+      <Route path="/leads/opportunity/create" element={<Layout><OpportunityForm /></Layout>} />
+      <Route path="/leads/opportunity/edit/:id" element={<Layout><OpportunityForm /></Layout>} />
       <Route path="/leads/follow-up" element={<Layout><FollowUp /></Layout>} />
       <Route path="/leads/social" element={<Layout><SocialIntegration /></Layout>} />
 

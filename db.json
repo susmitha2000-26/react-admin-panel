@@ -19,11 +19,21 @@
       "status": "Converted",
       "notes": "",
       "rep": "Bob"
+    },
+    {
+      "id": "a51f",
+      "name": "sus",
+      "email": "er@gmail.com",
+      "phone": "9864246789",
+      "source": "Social",
+      "status": "New",
+      "notes": "erghghkkj",
+      "rep": "Bob"
     }
   ],
   "opportunities": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Opportunity from Alice",
       "value": 5000,
       "rep": "Alice",
@@ -39,6 +49,15 @@
       "status": "Negotiation",
       "closeDate": "2025-07-17",
       "leadId": "2"
+    },
+    {
+      "id": "a138",
+      "name": "sf",
+      "leadId": "1",
+      "value": 56,
+      "rep": "Alice",
+      "status": "Prospecting",
+      "closeDate": "2025-07-19"
     }
   ],
   "followUps": [
