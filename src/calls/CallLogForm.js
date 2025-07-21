@@ -144,7 +144,7 @@ export default function CallLogForm() {
     label="Select Lead"
     onChange={handleChange}
     fullWidth
-    sx={{ minWidth: 200 }}  // Ensure enough width to show label
+    sx={{ minWidth: 200 }}  
     notched
   >
     {leads.map(lead => (

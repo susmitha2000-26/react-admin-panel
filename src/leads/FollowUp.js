@@ -55,7 +55,7 @@ export default function FollowUpPage() {
         </Button>
       </Grid>
 
-      {/* Filters: stacked on xs, inline on sm+ */}
+      
       <Grid
         container
         spacing={2}
