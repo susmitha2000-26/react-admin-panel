@@ -16,12 +16,18 @@ import UserManagementPage from './pages/UserManagementPage';
 
 // Leads-related
 import Leads from './leads/Leads';
+import LeadForm from './leads/LeadForm';
 import Opportunity from './leads/Opportunity';
 import OpportunityForm from './leads/OpportunityForm';
 
 import FollowUp from './leads/FollowUp';
+import CreateFollowUpPage from './leads/CreateFollowUpPage';
 import SocialIntegration from './leads/SocialIntegration';
-import LeadForm from './leads/LeadForm';
+// Call Logs
+import CallLogs from './calls/CallLogs';
+import CallLogForm from './calls/CallLogForm';
+import CallAnalytics from './calls/CallAnalytics';
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -50,9 +56,17 @@ const AppRoutes = () => {
       <Route path="/leads/opportunity/create" element={<Layout><OpportunityForm /></Layout>} />
       <Route path="/leads/opportunity/edit/:id" element={<Layout><OpportunityForm /></Layout>} />
       <Route path="/leads/follow-up" element={<Layout><FollowUp /></Layout>} />
+      <Route path="/leads/follow-up/new" element={<Layout><CreateFollowUpPage /></Layout>} />
+      <Route path="/leads/follow-up/edit/:id" element={<Layout><CreateFollowUpPage /></Layout>} />
       <Route path="/leads/social" element={<Layout><SocialIntegration /></Layout>} />
 
-      {/* 404 Page */}
+      <Route path="/calls" element={<Layout><CallLogs /></Layout>} />
+      <Route path="/calls/create" element={<Layout><CallLogForm /></Layout>} />
+      <Route path="/calls/edit/:id" element={<Layout><CallLogForm /></Layout>} />
+      <Route path="/calls/analytics" element={<Layout><CallAnalytics /></Layout>} />
+
+      
+       {/* 404 Page */}
       <Route path="*" element={<Layout><NotFound /></Layout>} />
     </Routes>
   );

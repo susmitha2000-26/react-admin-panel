@@ -8,7 +8,8 @@
       "source": "Website",
       "status": "Converted",
       "notes": "",
-      "rep": "Alice"
+      "rep": "Alice",
+      "createdAt": "2025-07-15T09:00:00Z"
     },
     {
       "id": "2",
@@ -18,7 +19,8 @@
       "source": "Social",
       "status": "Converted",
       "notes": "",
-      "rep": "Bob"
+      "rep": "Bob",
+      "createdAt": "2025-07-16T12:30:00Z"
     },
     {
       "id": "a51f",
@@ -28,7 +30,8 @@
       "source": "Social",
       "status": "New",
       "notes": "erghghkkj",
-      "rep": "Bob"
+      "rep": "Bob",
+      "createdAt": "2025-07-20T14:45:00Z"
     }
   ],
   "opportunities": [
@@ -68,6 +71,30 @@
       "notes": "customer",
       "leadId": "1",
       "rep": "Alice"
+    },
+    {
+      "id": "9062",
+      "title": "",
+      "date": "",
+      "notes": "",
+      "leadId": "",
+      "rep": ""
+    }
+  ],
+  "calls": [
+    {
+      "id": 1,
+      "leadId": 2,
+      "date": "2025-07-20",
+      "duration": "15 mins",
+      "notes": "Followed up on proposal."
+    },
+    {
+      "leadId": 2,
+      "date": "2025-07-21",
+      "duration": "10",
+      "notes": "",
+      "id": "87c6"
     }
   ]
 }

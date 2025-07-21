@@ -30,6 +30,8 @@ import {
   Close as CloseIcon,
   People as PeopleIcon, // import for User Management
 } from '@mui/icons-material';
+import PhoneIcon from '@mui/icons-material/Phone';
+
 
 const Sidebar = ({ open, onClose }) => {
   const theme = useTheme();
@@ -58,6 +60,8 @@ const Sidebar = ({ open, onClose }) => {
     { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
     { text: 'Help', icon: <HelpOutlineIcon />, path: '/help' },
     { text: 'User Management', icon: <PeopleIcon />, path: '/admin/users' }, 
+    { text: 'Call Logs', icon: <PhoneIcon />, path: '/calls' },
+
   ];
 
   const leadsSubmenu = [

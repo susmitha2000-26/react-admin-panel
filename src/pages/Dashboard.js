@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box, Grid, Card, CardContent, Typography, CircularProgress } from '@mui/material';
+import {
+  Box, Grid, Card, CardContent,
+  Typography, CircularProgress
+} from '@mui/material';
 import { Pie, Bar, Line } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement } from 'chart.js';
+import {
+  Chart as ChartJS, ArcElement, Tooltip, Legend,
+  CategoryScale, LinearScale, BarElement, PointElement, LineElement
+} from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement);
 
@@ -36,8 +42,14 @@ export default function Dashboard() {
   const leadsBySource = getCounts('source');
 
   const leadsOverTime = leads.reduce((acc, lead) => {
-    const date = new Date(lead.createdAt || lead.id).toISOString().slice(0, 10);
-    acc[date] = (acc[date] || 0) + 1;
+    const dateStr = lead.createdAt;
+    if (!dateStr) return acc;
+
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return acc;
+
+    const key = date.toISOString().slice(0, 10);
+    acc[key] = (acc[key] || 0) + 1;
     return acc;
   }, {});
   const sortedDates = Object.keys(leadsOverTime).sort();
