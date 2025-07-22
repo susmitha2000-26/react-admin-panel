@@ -51,14 +51,35 @@ export default function CallLogForm() {
     fetchData();
   }, [id]);
 
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = e => {
+    const { name, value } = e.target;
+
+    // Validation for Duration field - only digits, spaces and colon allowed (e.g. "15", "1:30")
+    if (name === 'duration') {
+      const regex = /^[0-9 :]*$/;
+      if (!regex.test(value)) {
+        // Ignore invalid characters, no update
+        return;
+      }
+    }
+
+    setForm({ ...form, [name]: value });
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
     setSubmitting(true);
 
+    // Basic validation for required fields
     if (!form.leadId || !form.date || !form.duration) {
       showAlert('All fields except notes are required.', 'error');
+      setSubmitting(false);
+      return;
+    }
+
+    // Additional validation: Duration should be numeric or time format (e.g. 15 or 1:30)
+    if (!/^[0-9]+(:[0-9]{1,2})?$/.test(form.duration.trim())) {
+      showAlert('Duration should be a valid number or time format (e.g. "15" or "1:30").', 'error');
       setSubmitting(false);
       return;
     }
@@ -117,13 +138,23 @@ export default function CallLogForm() {
   }
 
   return (
-    <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 }, borderRadius: 3, maxWidth: 800, mx: 'auto' }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+    <Paper
+      elevation={3}
+      sx={{
+        p: { xs: 2, sm: 4 },
+        borderRadius: 3,
+        maxWidth: 800,
+        mx: 'auto',
+        bgcolor: '#fff',
+        boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+      }}
+    >
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3} flexWrap="wrap" gap={1}>
         <Typography variant="h5" fontWeight={600}>
           {isEdit ? 'Edit' : 'Create'} Call Log
         </Typography>
         {isEdit && (
-          <IconButton color="error" onClick={() => setConfirmOpen(true)} disabled={deleting}>
+          <IconButton color="error" onClick={() => setConfirmOpen(true)} disabled={deleting} aria-label="delete call log">
             <DeleteIcon />
           </IconButton>
         )}
@@ -133,26 +164,26 @@ export default function CallLogForm() {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth required>
-  <InputLabel id="lead-label" shrink>
-    Select Lead
-  </InputLabel>
-  <Select
-    labelId="lead-label"
-    id="lead-leadId"
-    name="leadId"
-    value={form.leadId}
-    label="Select Lead"
-    onChange={handleChange}
-    fullWidth
-    sx={{ minWidth: 200 }}  
-    notched
-  >
-    {leads.map(lead => (
-      <MenuItem key={lead.id} value={lead.id.toString()}>
-        {lead.name}
-      </MenuItem>
-    ))}
-  </Select>
+              <InputLabel id="lead-label" shrink>
+                Select Lead
+              </InputLabel>
+              <Select
+                labelId="lead-label"
+                id="lead-leadId"
+                name="leadId"
+                value={form.leadId}
+                label="Select Lead"
+                onChange={handleChange}
+                fullWidth
+                sx={{ minWidth: 200 }}
+                notched
+              >
+                {leads.map(lead => (
+                  <MenuItem key={lead.id} value={lead.id.toString()}>
+                    {lead.name}
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
           </Grid>
 
@@ -177,7 +208,9 @@ export default function CallLogForm() {
               name="duration"
               value={form.duration}
               onChange={handleChange}
-              placeholder="e.g. 15 mins"
+              placeholder="e.g. 15 or 1:30"
+              helperText="Enter duration in minutes or mm:ss format"
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
             />
           </Grid>
 
@@ -201,7 +234,7 @@ export default function CallLogForm() {
               color="primary"
               disabled={submitting}
               fullWidth
-              sx={{ py: 1.2 }}
+              sx={{ py: 1.5, fontWeight: 600, fontSize: 16 }}
             >
               {submitting ? 'Saving...' : isEdit ? 'Update Call Log' : 'Create Call Log'}
             </Button>
@@ -210,8 +243,8 @@ export default function CallLogForm() {
       </form>
 
       {/* Snackbar Notifications */}
-      <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleCloseSnackbar}>
-        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled">
+      <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled" sx={{ width: '100%' }}>
           {snackbar.message}
         </Alert>
       </Snackbar>

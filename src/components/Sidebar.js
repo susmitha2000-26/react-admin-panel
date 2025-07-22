@@ -13,6 +13,7 @@ import {
   Box,
   Typography,
   IconButton,
+  Divider,
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -28,10 +29,9 @@ import {
   FollowTheSigns as FollowUpIcon,
   Share as SocialIcon,
   Close as CloseIcon,
-  People as PeopleIcon, // import for User Management
+  People as PeopleIcon,
 } from '@mui/icons-material';
 import PhoneIcon from '@mui/icons-material/Phone';
-
 
 const Sidebar = ({ open, onClose }) => {
   const theme = useTheme();
@@ -59,9 +59,8 @@ const Sidebar = ({ open, onClose }) => {
     { text: 'Reports', icon: <AssessmentIcon />, path: '/reports' },
     { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
     { text: 'Help', icon: <HelpOutlineIcon />, path: '/help' },
-    { text: 'User Management', icon: <PeopleIcon />, path: '/admin/users' }, 
+    { text: 'User Management', icon: <PeopleIcon />, path: '/admin/users' },
     { text: 'Call Logs', icon: <PhoneIcon />, path: '/calls' },
-
   ];
 
   const leadsSubmenu = [
@@ -81,9 +80,9 @@ const Sidebar = ({ open, onClose }) => {
       sx={{
         '& .MuiDrawer-paper': {
           width: 240,
-          ...(isDesktop && {
-            position: 'relative',
-          }),
+          bgcolor: theme.palette.background.paper,
+          boxShadow: isDesktop ? 'none' : theme.shadows[5],
+          borderRight: `1px solid ${theme.palette.divider}`,
         },
       }}
     >
@@ -96,12 +95,11 @@ const Sidebar = ({ open, onClose }) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           px: 2,
-          py: 1,
-          borderBottom: '1px solid',
-          borderColor: 'divider',
+          py: 1.5,
+          borderBottom: `1px solid ${theme.palette.divider}`,
         }}
       >
-        <Typography variant="h6" noWrap>
+        <Typography variant="h6" fontWeight="bold">
           CRM
         </Typography>
 
@@ -110,7 +108,9 @@ const Sidebar = ({ open, onClose }) => {
         </IconButton>
       </Box>
 
-      {/* Top Menu */}
+      <Divider />
+
+      {/* Menu List */}
       <List>
         {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding>
@@ -120,8 +120,17 @@ const Sidebar = ({ open, onClose }) => {
                 navigate(item.path);
                 if (!isDesktop) onClose();
               }}
+              sx={{
+                '&.Mui-selected': {
+                  backgroundColor: theme.palette.action.selected,
+                  color: theme.palette.primary.main,
+                  '& .MuiListItemIcon-root': {
+                    color: theme.palette.primary.main,
+                  },
+                },
+              }}
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>
           </ListItem>
@@ -143,14 +152,23 @@ const Sidebar = ({ open, onClose }) => {
             {leadsSubmenu.map((item) => (
               <ListItem key={item.text} disablePadding>
                 <ListItemButton
-                  sx={{ pl: 4 }}
+                  sx={{
+                    pl: 4,
+                    '&.Mui-selected': {
+                      backgroundColor: theme.palette.action.selected,
+                      color: theme.palette.primary.main,
+                      '& .MuiListItemIcon-root': {
+                        color: theme.palette.primary.main,
+                      },
+                    },
+                  }}
                   selected={location.pathname === item.path}
                   onClick={() => {
                     navigate(item.path);
                     if (!isDesktop) onClose();
                   }}
                 >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
                   <ListItemText primary={item.text} />
                 </ListItemButton>
               </ListItem>

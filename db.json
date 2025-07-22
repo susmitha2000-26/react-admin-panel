@@ -96,5 +96,14 @@
       "notes": "",
       "id": "87c6"
     }
-  ]
+  ],
+  "settings": [
+  {
+    "id": 1,
+    "notifications": true,
+    "defaultRep": "",
+    "timeZone": "UTC"
+  }
+]
+
 }

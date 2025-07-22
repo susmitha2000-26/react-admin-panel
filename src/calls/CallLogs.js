@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Box, Typography, Button, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Paper, CircularProgress, Snackbar, Alert,
-  TablePagination, IconButton, Menu, MenuItem, useMediaQuery, useTheme
+  TablePagination, IconButton, Menu, MenuItem, useMediaQuery, useTheme, Stack
 } from '@mui/material';
 import { Add, MoreVert } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -91,15 +91,21 @@ export default function CallLogs() {
   const paginatedCalls = calls.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
   return (
-    <Box p={2}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3} flexWrap="wrap">
-        <Typography variant="h5" fontWeight={600}>📞 Call Logs</Typography>
-        <Box>
+    <Box p={isMobile ? 2 : 4} bgcolor="#f4f6f8" minHeight="100vh">
+      {/* Header */}
+      <Stack
+        direction={isMobile ? 'column' : 'row'}
+        justifyContent="space-between"
+        alignItems={isMobile ? 'flex-start' : 'center'}
+        spacing={2}
+        mb={3}
+      >
+        <Typography variant={isMobile ? "h6" : "h5"} fontWeight={600}>📞 Call Logs</Typography>
+        <Stack direction="row" spacing={1} flexWrap="wrap">
           <Button
             variant="contained"
             startIcon={<Add />}
             onClick={() => navigate('/calls/create')}
-            sx={{ mr: 2 }}
           >
             New Call Log
           </Button>
@@ -109,57 +115,63 @@ export default function CallLogs() {
           >
             View Analytics
           </Button>
-        </Box>
-      </Box>
+        </Stack>
+      </Stack>
 
-      <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
-        <Table size="small" sx={{ minWidth: isMobile ? 700 : 650 }}>
-          <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
-            <TableRow>
-              <TableCell><strong>Lead</strong></TableCell>
-              <TableCell><strong>Date</strong></TableCell>
-              <TableCell><strong>Duration</strong></TableCell>
-              <TableCell><strong>Notes</strong></TableCell>
-              <TableCell align="center"><strong>Actions</strong></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
+      {/* Table */}
+      <Paper elevation={3} sx={{ borderRadius: 2 }}>
+        <TableContainer sx={{ overflowX: 'auto' }}>
+          <Table size="small" sx={{ minWidth: 650 }}>
+            <TableHead sx={{ backgroundColor: '#e8eaf6' }}>
               <TableRow>
-                <TableCell colSpan={5} align="center"><CircularProgress /></TableCell>
+                <TableCell><strong>Lead</strong></TableCell>
+                <TableCell><strong>Date</strong></TableCell>
+                <TableCell><strong>Duration</strong></TableCell>
+                <TableCell><strong>Notes</strong></TableCell>
+                <TableCell align="center"><strong>Actions</strong></TableCell>
               </TableRow>
-            ) : paginatedCalls.length ? (
-              paginatedCalls.map(log => (
-                <TableRow key={log.id} hover>
-                  <TableCell>{log.leadName}</TableCell>
-                  <TableCell>{log.date}</TableCell>
-                  <TableCell>{log.duration}</TableCell>
-                  <TableCell sx={{ whiteSpace: 'pre-wrap' }}>{log.notes}</TableCell>
-                  <TableCell align="center">
-                    <IconButton size="small" onClick={e => handleMenuOpen(e, log.id)}>
-                      <MoreVert />
-                    </IconButton>
-                    <Menu
-                      anchorEl={anchorEl}
-                      open={menuId === log.id}
-                      onClose={handleMenuClose}
-                    >
-                      <MenuItem onClick={handleEdit}>Edit</MenuItem>
-                      <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>Delete</MenuItem>
-                    </Menu>
+            </TableHead>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    <CircularProgress />
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={5} align="center">No call logs found</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              ) : paginatedCalls.length ? (
+                paginatedCalls.map(log => (
+                  <TableRow key={log.id} hover>
+                    <TableCell>{log.leadName}</TableCell>
+                    <TableCell>{log.date}</TableCell>
+                    <TableCell>{log.duration}</TableCell>
+                    <TableCell sx={{ whiteSpace: 'pre-wrap' }}>{log.notes}</TableCell>
+                    <TableCell align="center">
+                      <IconButton size="small" onClick={e => handleMenuOpen(e, log.id)}>
+                        <MoreVert />
+                      </IconButton>
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={menuId === log.id}
+                        onClose={handleMenuClose}
+                      >
+                        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                        <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>Delete</MenuItem>
+                      </Menu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">No call logs found</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
 
-      <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
+      {/* Pagination */}
+      <Box mt={2} display="flex" justifyContent="space-between" flexWrap="wrap" alignItems="center" gap={1}>
         <Typography variant="body2">
           Showing {calls.length ? page * rowsPerPage + 1 : 0}–{Math.min((page + 1) * rowsPerPage, calls.length)} of {calls.length}
         </Typography>
@@ -174,6 +186,7 @@ export default function CallLogs() {
         />
       </Box>
 
+      {/* Snackbar */}
       <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} variant="filled">
           {snackbar.message}

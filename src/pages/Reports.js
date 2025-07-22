@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box, Grid, Typography, TextField, MenuItem, Paper,
-  CircularProgress, FormControl, InputLabel, Select
+  CircularProgress, FormControl, InputLabel, Select, useTheme
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -10,6 +10,7 @@ import { Bar, Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 
 const API_OPPS = 'http://localhost:4000/opportunities';
 const REPS = ['All', 'Alice', 'Bob', 'Carol'];
@@ -22,6 +23,7 @@ export default function ReportsPage() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [startDate, setStartDate] = useState(dayjs().subtract(30, 'day'));
   const [endDate, setEndDate] = useState(dayjs());
+  const theme = useTheme();
 
   useEffect(() => {
     loadData();
@@ -61,7 +63,8 @@ export default function ReportsPage() {
     datasets: [{
       label: 'Opportunity Value ($)',
       data: Object.values(valueByRep).map(v => v.reduce((sum, o) => sum + +o.value, 0)),
-      backgroundColor: '#42a5f5'
+      backgroundColor: '#42a5f5',
+      borderRadius: 6,
     }]
   };
 
@@ -71,22 +74,25 @@ export default function ReportsPage() {
     datasets: [{
       label: 'Deals by Status',
       data: Object.values(valueByStatus).map(v => v.length),
-      backgroundColor: ['#42a5f5', '#66bb6a', '#ffa726', '#ec407a', '#ab47bc', '#ff7043']
+      backgroundColor: ['#42a5f5', '#66bb6a', '#ffa726', '#ec407a', '#ab47bc', '#ff7043', '#26c6da'],
+      borderWidth: 1,
     }]
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box p={2}>
-        <Typography variant="h4" mb={2}>CRM Reports</Typography>
+      <Box p={{ xs: 2, sm: 3 }}>
+        <Typography variant="h4" fontWeight="bold" gutterBottom>
+          CRM Reports
+        </Typography>
 
-        <Grid container spacing={2} mb={2}>
+        <Grid container spacing={2} mb={3}>
           <Grid item xs={12} sm={6} md={3}>
             <DatePicker
               label="Start Date"
               value={startDate}
               onChange={setStartDate}
-              slotProps={{ textField: { fullWidth: true } }}
+              slotProps={{ textField: { fullWidth: true, variant: 'outlined' } }}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -94,7 +100,7 @@ export default function ReportsPage() {
               label="End Date"
               value={endDate}
               onChange={setEndDate}
-              slotProps={{ textField: { fullWidth: true } }}
+              slotProps={{ textField: { fullWidth: true, variant: 'outlined' } }}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -116,27 +122,41 @@ export default function ReportsPage() {
         </Grid>
 
         {loading ? (
-          <Box textAlign="center"><CircularProgress /></Box>
+          <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>
         ) : (
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <Paper elevation={3} sx={{ p: 2 }}>
-                <Typography variant="h6" gutterBottom>Opportunity Value by Rep</Typography>
-                <Bar data={barChartData} />
-              </Paper>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                <Paper elevation={4} sx={{ p: 3, borderRadius: 3 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Opportunity Value by Rep
+                  </Typography>
+                  <Bar data={barChartData} />
+                </Paper>
+              </motion.div>
             </Grid>
+
             <Grid item xs={12} md={6}>
-              <Paper elevation={3} sx={{ p: 2 }}>
-                <Typography variant="h6" gutterBottom>Deals by Status</Typography>
-                <Pie data={pieChartData} />
-              </Paper>
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+                <Paper elevation={4} sx={{ p: 3, borderRadius: 3 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Deals by Status
+                  </Typography>
+                  <Pie data={pieChartData} />
+                </Paper>
+              </motion.div>
             </Grid>
+
             <Grid item xs={12}>
-              <Paper elevation={2} sx={{ p: 2 }}>
-                <Typography variant="h6" gutterBottom>Summary</Typography>
-                <Typography>Total Opportunities: {data.length}</Typography>
-                <Typography>Total Value: ${totalValue.toLocaleString()}</Typography>
-              </Paper>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <Paper elevation={2} sx={{ p: 3, borderRadius: 3 }}>
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Summary
+                  </Typography>
+                  <Typography>Total Opportunities: <strong>{data.length}</strong></Typography>
+                  <Typography>Total Value: <strong>${totalValue.toLocaleString()}</strong></Typography>
+                </Paper>
+              </motion.div>
             </Grid>
           </Grid>
         )}
