@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Drawer,
   List,
@@ -40,15 +40,6 @@ const Sidebar = ({ open, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [openLeadsMenu, setOpenLeadsMenu] = useState(false);
-  const [anchor, setAnchor] = useState('left');
-
-  useEffect(() => {
-    if (location.pathname.startsWith('/leads')) {
-      setAnchor('right');
-    } else {
-      setAnchor('left');
-    }
-  }, [location.pathname]);
 
   const handleLeadsClick = () => {
     setOpenLeadsMenu((prev) => !prev);
@@ -75,7 +66,7 @@ const Sidebar = ({ open, onClose }) => {
       variant={isDesktop ? 'persistent' : 'temporary'}
       open={open}
       onClose={onClose}
-      anchor={anchor}
+      anchor="left" // Always on the left
       ModalProps={{ keepMounted: true }}
       sx={{
         '& .MuiDrawer-paper': {

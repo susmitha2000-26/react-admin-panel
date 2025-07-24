@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   CircularProgress, Snackbar, Alert, TablePagination, Chip, Grid, Typography,
-  IconButton, Menu, MenuItem
+  IconButton, Menu, MenuItem, useTheme
 } from '@mui/material';
 import { Add, MoreVert } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ const API_LEADS = 'http://localhost:4000/leads';
 const API_OPPS = 'http://localhost:4000/opportunities';
 
 export default function OpportunitiesPage() {
+  const theme = useTheme();
   const [oppsData, setOppsData] = useState({ items: [], total: 0 });
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,76 +79,108 @@ export default function OpportunitiesPage() {
   return (
     <Box p={2}>
       <Grid container justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h5">Opportunities</Typography>
+        <Typography variant="h5" fontWeight="bold">Opportunities</Typography>
         <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/leads/opportunity/create')}>
           New Opportunity
         </Button>
       </Grid>
 
-      <TableContainer>
-        <Table>
+      <TableContainer sx={{ maxHeight: 440 }}>
+        <Table stickyHeader>
           <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Lead</TableCell>
-              <TableCell>Value</TableCell>
-              <TableCell>Rep</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Close Date</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
+  <TableRow
+    sx={{
+      bgcolor: 'primary.main', // ensures good contrast with white text
+      position: 'sticky',
+      top: 0,
+      zIndex: 10,
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    }}
+    >
+     {['Name', 'Lead', 'Value', 'Rep', 'Status', 'Close Date', 'Actions'].map(header => (
+      <TableCell
+        key={header}
+        sx={{
+          color: '#fff', // white text
+          fontWeight: 'bold',
+          whiteSpace: 'nowrap',
+          px: 2,
+          py: 1.5,
+          borderBottom: '2px solid rgba(255,255,255,0.2)',
+          fontSize: { xs: '0.85rem', sm: '1rem' },
+          backgroundColor: 'primary.main',
+        }}
+         >
+           {header}
+         </TableCell>
+           ))}
+          </TableRow>
           </TableHead>
+
           <TableBody>
             {loading
-              ? <TableRow><TableCell colSpan={7} align="center"><CircularProgress /></TableCell></TableRow>
+              ? (
+                <TableRow>
+                  <TableCell colSpan={7} align="center">
+                    <CircularProgress />
+                  </TableCell>
+                </TableRow>
+              )
               : oppsData.items.length
                 ? oppsData.items.map(o => {
-                    const opp = enrich(o);
-                    return (
-                      <TableRow key={opp.id}>
-                        <TableCell>{opp.name}</TableCell>
-                        <TableCell>{opp.leadName}</TableCell>
-                        <TableCell>${opp.value}</TableCell>
-                        <TableCell>{opp.rep}</TableCell>
-                        <TableCell>
-                          <Chip label={opp.status} color={{
-                            Prospecting: 'primary',
-                            Qualification: 'info',
-                            Proposal: 'secondary',
-                            Negotiation: 'warning',
-                            Won: 'success',
-                            Lost: 'error'
-                          }[opp.status]} />
-                        </TableCell>
-                        <TableCell>{opp.closeDate}</TableCell>
-                        <TableCell>
-                          <IconButton onClick={(e) => handleMenuOpen(e, opp.id)}>
-                            <MoreVert />
-                          </IconButton>
-                          <Menu
-                            anchorEl={anchorEl}
-                            open={menuRowId === opp.id}
-                            onClose={handleMenuClose}
-                          >
-                            <MenuItem onClick={() => { navigate(`/leads/opportunity/edit/${opp.id}`); handleMenuClose(); }}>
-                              Edit
-                            </MenuItem>
-                            <MenuItem onClick={() => { deleteOpp(opp.id); handleMenuClose(); }} sx={{ color: 'error.main' }}>
-                              Delete
-                            </MenuItem>
-                          </Menu>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                : <TableRow><TableCell colSpan={7} align="center">No opportunities found</TableCell></TableRow>}
+                  const opp = enrich(o);
+                  return (
+                    <TableRow key={opp.id} hover>
+                      <TableCell>{opp.name}</TableCell>
+                      <TableCell>{opp.leadName}</TableCell>
+                      <TableCell>${opp.value}</TableCell>
+                      <TableCell>{opp.rep}</TableCell>
+                      <TableCell>
+                        <Chip label={opp.status} color={{
+                          Prospecting: 'primary',
+                          Qualification: 'info',
+                          Proposal: 'secondary',
+                          Negotiation: 'warning',
+                          Won: 'success',
+                          Lost: 'error'
+                        }[opp.status]} />
+                      </TableCell>
+                      <TableCell>{opp.closeDate}</TableCell>
+                      <TableCell>
+                        <IconButton onClick={(e) => handleMenuOpen(e, opp.id)}>
+                          <MoreVert />
+                        </IconButton>
+                        <Menu
+                          anchorEl={anchorEl}
+                          open={menuRowId === opp.id}
+                          onClose={handleMenuClose}
+                        >
+                          <MenuItem onClick={() => { navigate(`/leads/opportunity/edit/${opp.id}`); handleMenuClose(); }}>
+                            Edit
+                          </MenuItem>
+                          <MenuItem onClick={() => { deleteOpp(opp.id); handleMenuClose(); }} sx={{ color: 'error.main' }}>
+                            Delete
+                          </MenuItem>
+                        </Menu>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+                : (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                      No opportunities found
+                    </TableCell>
+                  </TableRow>
+                )
+            }
           </TableBody>
         </Table>
       </TableContainer>
 
-      <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
+      <Box mt={2} display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={1}>
         <Typography>
-          Showing {page * rowsPer + 1}–{Math.min((page + 1) * rowsPer, oppsData.total)} of {oppsData.total}
+          Showing {oppsData.total === 0 ? 0 : page * rowsPer + 1}–{Math.min((page + 1) * rowsPer, oppsData.total)} of {oppsData.total}
         </Typography>
         <TablePagination
           component="div"
@@ -157,6 +190,7 @@ export default function OpportunitiesPage() {
           onPageChange={(_, newPage) => setPage(newPage)}
           onRowsPerPageChange={e => { setRowsPer(+e.target.value); setPage(0); }}
           rowsPerPageOptions={[5, 10, 25]}
+          sx={{ minWidth: 240 }}
         />
       </Box>
 
@@ -164,8 +198,11 @@ export default function OpportunitiesPage() {
         open={snackbar.open}
         autoHideDuration={3000}
         onClose={() => setSnackbar(s => ({ ...s, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+        <Alert severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
       </Snackbar>
     </Box>
   );

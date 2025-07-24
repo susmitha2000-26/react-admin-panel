@@ -9,6 +9,9 @@ import { Add, Search, MoreVert } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import PrinterSelector from '../components/PrinterSelector';
+import LeadPrintExport from '../components/LeadPrintExport';
+
 const SOURCES = ['Website', 'Walk-in', 'Social', 'Referral'];
 const STATUSES = ['New', 'Contacted', 'Converted', 'Junk'];
 const API_URL = 'http://localhost:4000/leads';
@@ -23,6 +26,7 @@ export default function LeadsPage() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuLeadId, setMenuLeadId] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [selectedPrinter, setSelectedPrinter] = useState('');
 
   const navigate = useNavigate();
   const theme = useTheme();
@@ -62,6 +66,7 @@ export default function LeadsPage() {
     setAnchorEl(e.currentTarget);
     setMenuLeadId(id);
   };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
     setMenuLeadId(null);
@@ -99,10 +104,12 @@ export default function LeadsPage() {
   };
 
   return (
-    <Box p={2}>
+    <Box p={2} sx={{ backgroundColor: '#f4f6f8', minHeight: '100vh' }}>
       {/* Header + Filters */}
       <Grid container spacing={2} alignItems="center" mb={2} justifyContent="space-between">
-        <Grid item><h2>Leads</h2></Grid>
+        <Grid item>
+          <Box sx={{ fontWeight: 'bold', fontSize: '1.8rem', color: '#333' }}>Leads</Box>
+        </Grid>
 
         <Grid item xs={12} sm={7} md={6}>
           <Grid container spacing={2} alignItems="center" wrap="wrap">
@@ -113,10 +120,11 @@ export default function LeadsPage() {
                 onChange={e => { setSearch(e.target.value); setPage(0); }}
                 fullWidth
                 InputProps={{ endAdornment: <Search fontSize="small" /> }}
+                sx={{ backgroundColor: 'white', borderRadius: 1 }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl fullWidth sx={{ minWidth: 150 }}>
+              <FormControl fullWidth sx={{ minWidth: 150, backgroundColor: 'white', borderRadius: 1 }}>
                 <InputLabel id="source-label">Source</InputLabel>
                 <Select
                   labelId="source-label"
@@ -133,23 +141,24 @@ export default function LeadsPage() {
         </Grid>
 
         <Grid item>
-          <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/leads/create')}>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => navigate('/leads/create')}
+            sx={{ backgroundColor: '#1976d2', color: '#fff', '&:hover': { backgroundColor: '#115293' } }}
+          >
             New Lead
           </Button>
         </Grid>
       </Grid>
 
-      {/* Responsive Table */}
-      <TableContainer sx={{ overflowX: 'auto' }}>
+      {/* Table */}
+      <TableContainer sx={{ overflowX: 'auto', backgroundColor: 'white', borderRadius: 2, boxShadow: 2 }}>
         <Table sx={{ minWidth: isMobile ? 700 : 650 }}>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: '#e3f2fd' }}>
             <TableRow>
               {['Name', 'Email', 'Phone', 'Source', 'Status', 'Rep', 'Actions'].map(h => (
-                <TableCell key={h}
-                  sx={h === 'Source'
-                    ? { minWidth: 150, whiteSpace: 'normal', wordBreak: 'break-word' }
-                    : {}}
-                >
+                <TableCell key={h} sx={{ fontWeight: 'bold', color: '#333' }}>
                   {h}
                 </TableCell>
               ))}
@@ -157,16 +166,18 @@ export default function LeadsPage() {
           </TableHead>
           <TableBody>
             {loading ? (
-              <TableRow><TableCell colSpan={7} align="center"><CircularProgress /></TableCell></TableRow>
+              <TableRow>
+                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+                  <CircularProgress />
+                </TableCell>
+              </TableRow>
             ) : leads.items.length ? (
               leads.items.map(lead => (
-                <TableRow key={lead.id}>
+                <TableRow key={lead.id} hover>
                   <TableCell>{lead.name}</TableCell>
                   <TableCell>{lead.email}</TableCell>
                   <TableCell>{lead.phone}</TableCell>
-                  <TableCell sx={{ minWidth: 150, whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                    {lead.source}
-                  </TableCell>
+                  <TableCell>{lead.source}</TableCell>
                   <TableCell>
                     <Chip
                       label={lead.status}
@@ -174,8 +185,8 @@ export default function LeadsPage() {
                         New: 'primary',
                         Contacted: 'info',
                         Converted: 'success',
-                        Junk: 'default'
-                      }[lead.status]}
+                        Junk: 'default',
+                      }[lead.status] || 'default'}
                     />
                   </TableCell>
                   <TableCell>{lead.rep}</TableCell>
@@ -194,15 +205,19 @@ export default function LeadsPage() {
                 </TableRow>
               ))
             ) : (
-              <TableRow><TableCell colSpan={7} align="center">No leads found</TableCell></TableRow>
+              <TableRow>
+                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+                  No leads found
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
       </TableContainer>
 
       {/* Pagination */}
-      <Box mt={1} display="flex" justifyContent="space-between" alignItems="center">
-        <Box>
+      <Box mt={2} display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap">
+        <Box sx={{ fontSize: 14, color: '#666', mb: isMobile ? 1 : 0 }}>
           Showing {leads.items.length ? page * rowsPer + 1 : 0}–{Math.min((page + 1) * rowsPer, leads.total)} of {leads.total}
         </Box>
         <TablePagination
@@ -216,8 +231,25 @@ export default function LeadsPage() {
         />
       </Box>
 
+      {/* ✅ Printer Section */}
+      <Box mt={3}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <PrinterSelector selectedPrinter={selectedPrinter} setSelectedPrinter={setSelectedPrinter} />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <LeadPrintExport leads={leads.items} printer={selectedPrinter} />
+          </Grid>
+        </Grid>
+      </Box>
+
       {/* Snackbar */}
-      <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar(s => ({ ...s, open: false }))}>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar(s => ({ ...s, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
         <Alert severity={snackbar.severity} onClose={() => setSnackbar(s => ({ ...s, open: false }))}>
           {snackbar.message}
         </Alert>
